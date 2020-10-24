@@ -1,16 +1,22 @@
 version: 2.1
+
+orbs:
+  python: circleci/python@0.2.1
+
 jobs:
-  llvm-clang:
-   docker:
-      - image: archlinux:latest
-   steps:
+  build-and-test:
+    executor: python/default
+    steps:
+      - checkout
+      - python/load-cache
+      - python/install-deps
+      - python/save-cache
       - run:
-          command: |
-           checkout
-           pacman -Sy base-devel bison ccache clang cmake flex git libelf lld ninja openssl python python3 uboot-tools --noconfirm
-           bash build.sh
+          command: ./manage.py test
+          name: Test
+
 workflows:
-  version: 2.1
-  BOB the builder:
+  main:
     jobs:
-      - llvm-clang
+      - build-and-test
+
