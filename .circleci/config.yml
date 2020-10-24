@@ -1,0 +1,16 @@
+version: 2.1
+jobs:
+  llvm-clang:
+   docker:
+      - image: archlinux:latest
+   steps:
+      - run:
+          command: |
+           checkout
+           pacman -Sy base-devel bison ccache clang cmake flex git libelf lld ninja openssl python python3 uboot-tools --noconfirm
+           bash build.sh
+workflows:
+  version: 2.1
+  BOB the builder:
+    jobs:
+      - llvm-clang
